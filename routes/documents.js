@@ -33,7 +33,7 @@ router.post('/upload', upload.single('file'), async (req, res) => {
         for (let i = 0; i < text.length; i += (chunkSize - overlap)) {
             chunks.push(text.substring(i, i + chunkSize));
         }
-        const embeddingModel = genAI.getGenerativeModel({ model: "text-embedding-004" });
+        const embeddingModel = genAI.getGenerativeModel({ model: "gemini-embedding-2" });
 
         for (const chunk of chunks) {
             const result = await embeddingModel.embedContent(chunk);
