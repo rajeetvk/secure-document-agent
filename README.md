@@ -59,3 +59,36 @@ This application is designed to be instantly deployable on platforms like **Rend
 4. Set the Start Command to: `npm start` (or `node server.js`)
 5. Copy the variables from `.env` directly into the cloud provider's Environment Variables dashboard.
 *(Because Supabase hosts the PostgreSQL database remotely, the Node.js backend requires zero local persistent storage, allowing the cloud host to spin it up or scale it horizontally instantly).*
+
+---
+
+## 🧪 Grader's Testing Guide
+
+To make testing as effortless as possible, a throwaway account has been pre-configured on the live deployment.
+
+**1. Live Deployment Details**
+- **URL:** *(Insert your live Render URL here)*
+- **Email:** *(Insert the login email you created)*
+- **Password:** *(Insert the login password)*
+
+*(Note: The application is hosted on Render's free tier. If the server has gone to sleep, it may take ~50 seconds to spin up when you first click the link).*
+
+**2. Downloading the Sample PDFs**
+In the root of this GitHub repository, there is a folder called `sample_docs/`. Download these two files to your computer:
+- `HR_Policy.pdf`
+- `Finance_Report.pdf`
+
+**3. Testing Workspace Isolation**
+This account has two workspaces pre-loaded:
+- **Workspace A (HR):** (Upload the `HR_Policy.pdf` here)
+- **Workspace B (Finance):** (Upload the `Finance_Report.pdf` here)
+
+To test the vector database SQL isolation:
+1. Select **Workspace A (HR)** from the top-right dropdown.
+2. Ask: *"What is the policy on vacation days?"* -> (It will answer correctly based on the HR document).
+3. Ask: *"What is the Q3 Revenue?"* -> (It will prove isolation by saying *"I don't know"*, because the Finance document is securely locked in a different workspace).
+
+**4. Testing Agentic Tool Calling (Side Effects)**
+1. Switch to **Workspace B (Finance)**.
+2. Ask the AI: *"Remind me to review this revenue report tomorrow."* 
+3. Watch the UI: The AI will autonomously decide to halt text generation and trigger the `save_task` tool. You will see the backend intercept this, run the PostgreSQL insert, and the task will instantly appear in the bottom-left **Agent Tool Log**.
