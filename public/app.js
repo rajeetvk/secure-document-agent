@@ -84,6 +84,12 @@ function showDashboard() {
     dashboardView.classList.add('active');
     navWorkspaceName.textContent = currentWorkspaceName;
     history.pushState({ view: 'dashboard' }, '', '#dashboard');
+    
+    // Clear residual upload state when entering a new workspace
+    uploadStatus.textContent = 'Upload PDF documents to train your agent.';
+    uploadStatus.className = 'status-msg';
+    chunkCount.textContent = '0';
+    
     refreshDocumentList();
     loadChatHistory();
 }
