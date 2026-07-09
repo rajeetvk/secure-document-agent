@@ -49,6 +49,11 @@ router.post('/upload', upload.single('file'), async (req, res) => {
                 content: chunk,
                 embedding: embeddingNumbers
             }]);
+            
+            // SECURITY/RATE-LIMIT FIX: 
+            // The free tier of Gemini API crashes with '429 Too Many Requests' if we slam it with 100 parallel embedding requests.
+            // We add a 1500ms delay between each chunk to safely stay under the quota limit.
+            await new Promise(resolve => setTimeout(resolve, 1500));
         }
         res.json({
             message: "File uploaded,chunked,and safely isolated in the database!",
