@@ -44,7 +44,7 @@ router.post('/', async (req, res) => {
         }
 
         // 1. Give Gemini BOTH Tools
-        const chatModel = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        const chatModel = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
         const chatSession = chatModel.startChat({
             tools: [{
                 functionDeclarations: [
