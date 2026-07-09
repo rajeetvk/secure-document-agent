@@ -62,12 +62,12 @@ This application is designed to be instantly deployable on platforms like **Rend
 
 ---
 
-## 🧪 Grader's Testing Guide
+##  Grader's Testing Guide
 
 To make testing as effortless as possible, a throwaway account has been pre-configured on the live deployment.
 
 **1. Live Deployment Details**
-- **URL:** *(Insert your live Render URL here)*
+- **URL:** *https://nexus-agent-brw6.onrender.com*
 - **Email:** *(Insert the login email you created)*
 - **Password:** *(Insert the login password)*
 
