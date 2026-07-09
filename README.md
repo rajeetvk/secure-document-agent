@@ -18,7 +18,7 @@ A robust, multi-tenant AI document assistant featuring strict workspace isolatio
 
 - **Backend:** Node.js, Express, Multer (Memory Storage)
 - **Database:** Supabase (PostgreSQL + pgvector 3072-Dimensions)
-- **AI Models:** Google Gemini (`gemini-flash-latest` for inference, `gemini-embedding-2` for vectors)
+- **AI Models:** Google Gemini (`gemini-1.5-flash` for inference, `gemini-embedding-2` for vectors)
 
 ## How to Run Locally
 
