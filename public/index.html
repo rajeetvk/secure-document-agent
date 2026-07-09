@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus | Secure Document Agent</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+    <div id="app">
+        <!-- Auth View -->
+        <div id="auth-view" class="view active">
+            <div class="auth-card glass-panel">
+                <div class="logo">
+                    <i class="fa-solid fa-bolt-lightning text-gradient"></i>
+                    <h2>NEXUS</h2>
+                </div>
+                <p class="subtitle">Secure Multi-Tenant Agent</p>
+                <form id="login-form">
+                    <div class="input-group">
+                        <label>Email</label>
+                        <input type="email" id="email" placeholder="Enter your email" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Password</label>
+                        <input type="password" id="password" placeholder="Enter your password" required>
+                    </div>
+                    <button type="submit" class="btn-primary" id="loginBtn">
+                        <span id="btnText">Sign In</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </form>
+                <div style="margin-top: 15px; font-size: 0.85rem; color: var(--text-muted);">
+                    <span id="toggleText">Don't have an account?</span> 
+                    <a href="#" id="toggleAuth" style="color: var(--primary); text-decoration: none; font-weight: 600;">Sign Up</a>
+                </div>
+                <div id="auth-status" class="status-msg"></div>
+            </div>
+        </div>
+
+        <!-- Workspace Switcher View -->
+        <div id="switcher-view" class="view">
+            <div class="auth-card glass-panel" style="max-width: 500px;">
+                <div class="logo">
+                    <i class="fa-solid fa-layer-group text-gradient"></i>
+                    <h2>Workspaces</h2>
+                </div>
+                <p class="subtitle">Select a workspace or create a new one</p>
+                
+                <div id="workspace-list" style="margin-bottom: 20px; display: flex; flex-direction: column; gap: 10px; max-height: 300px; overflow-y: auto;">
+                    <!-- Dynamically populated -->
+                </div>
+
+                <form id="create-workspace-form" style="border-top: 1px solid var(--border-color); padding-top: 20px; margin-top: 10px;">
+                    <div class="input-group">
+                        <label>Create New Workspace</label>
+                        <div style="display: flex; gap: 10px;">
+                            <input type="text" id="newWorkspaceName" placeholder="Workspace Name" required>
+                            <button type="submit" class="btn-primary" id="createWsBtn" style="width: auto; padding: 0 20px;">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                <div style="margin-top: 15px;">
+                    <a href="#" id="logoutFromSwitcher" style="color: #fca5a5; text-decoration: none; font-size: 0.85rem;">Log Out</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard View -->
+        <div id="dashboard-view" class="view">
+            <nav class="glass-nav">
+                <div class="logo-small">
+                    <i class="fa-solid fa-bolt-lightning text-gradient"></i>
+                    <span>NEXUS</span>
+                </div>
+                <div class="nav-right">
+                    <div class="badge">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <span id="nav-workspace-name">Workspace</span>
+                    </div>
+                    <button id="switchWsBtn" style="background: rgba(59, 130, 246, 0.2); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.4); padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s;">
+                        <i class="fa-solid fa-repeat"></i> Switch
+                    </button>
+                    <button id="logoutBtn" style="background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.4); padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s;">
+                        <i class="fa-solid fa-power-off"></i> Log Out
+                    </button>
+                </div>
+            </nav>
+
+            <main class="dashboard-grid">
+                <!-- Left Column: Documents and Logs -->
+                <div class="left-column" style="display: flex; flex-direction: column; gap: 25px;">
+                    <section class="panel document-panel glass-panel">
+                    <div class="panel-header">
+                        <h3><i class="fa-solid fa-file-pdf"></i> Knowledge Base</h3>
+                    </div>
+                    
+                    <div class="upload-zone" id="uploadZone">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <p>Drag & drop PDF here or click to browse</p>
+                        <input type="file" id="fileInput" accept="application/pdf" hidden>
+                    </div>
+                    
+                    <div id="upload-status" class="status-msg"></div>
+
+                    <div class="stats-card">
+                        <div class="stat">
+                            <span class="stat-value text-gradient" id="docCount">0</span>
+                            <span class="stat-label">Documents</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value text-gradient" id="chunkCount">0</span>
+                            <span class="stat-label">Vector Chunks</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value text-gradient">3072</span>
+                            <span class="stat-label">Dimensions</span>
+                        </div>
+                    </div>
+
+                    <div id="doc-list" style="margin: 0 20px 20px 20px; max-height: 150px; overflow-y: auto; font-size: 0.85rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 8px;">
+                        <!-- Documents will appear here -->
+                    </div>
+                </section>
+                
+                <section class="panel glass-panel" style="margin-top: -5px;">
+                    <div class="panel-header" style="padding: 15px 20px;">
+                        <h3 style="font-size: 1rem;"><i class="fa-solid fa-microchip"></i> Agent Tool Log</h3>
+                    </div>
+                    <div id="task-list" style="padding: 15px 20px; max-height: 200px; overflow-y: auto; font-size: 0.85rem; display: flex; flex-direction: column; gap: 8px;">
+                        <div class="status-msg">No tools invoked yet.</div>
+                    </div>
+                </section>
+                </div>
+
+                <!-- Right Column: Agent Chat -->
+                <section class="panel chat-panel glass-panel">
+                    <div class="panel-header">
+                        <h3><i class="fa-solid fa-robot"></i> Agentic Chat</h3>
+                        <span class="model-badge">Gemini Flash Latest</span>
+                    </div>
+                    
+                    <div class="chat-history" id="chatHistory">
+                        <div class="message system-msg">
+                            <div class="avatar"><i class="fa-solid fa-bolt-lightning"></i></div>
+                            <div class="bubble">Workspace initialized. I am your secure document agent. You can ask me questions about your uploaded PDFs or command me to save tasks.</div>
+                        </div>
+                    </div>
+
+                    <div class="chat-input-area">
+                        <form id="chat-form">
+                            <input type="text" id="chatInput" placeholder="Ask a question or assign a task..." required autocomplete="off">
+                            <button type="submit" id="sendBtn" class="btn-primary btn-round">
+                                <i class="fa-solid fa-paper-plane"></i>
+                            </button>
+                        </form>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

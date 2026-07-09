@@ -20,6 +20,10 @@ router.post('/upload', upload.single('file'), async (req, res) => {
         const pdfData = await pdfParse(file.buffer);
         const text = pdfData.text;
 
+        // IDEMPOTENCY: If the document already exists, delete it first to prevent duplicate chunks.
+        // Thanks to 'ON DELETE CASCADE' in our schema, this automatically wipes all its old vector chunks too!
+        await supabase.from('documents').delete().eq('workspace_id', workspace_id).eq('filename', file.originalname);
+
         const { data: docData, error: docError } = await supabase.from('documents').insert([{
             workspace_id: workspace_id, filename: file.originalname
         }]).select();
@@ -61,8 +65,20 @@ router.post('/upload', upload.single('file'), async (req, res) => {
 
 });
 
+// Get all documents for a workspace
+router.get('/:workspace_id', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('documents')
+            .select('*')
+            .eq('workspace_id', req.params.workspace_id)
+            .order('created_at', { ascending: false });
 
-
-module.exports = router;
+        if (error) throw error;
+        res.json({ documents: data });
+    } catch (error) {
+        res.status(500).json({ error: "Failed to fetch documents", detail: error.message });
+    }
+});module.exports = router;
 
 // configure the storage 
