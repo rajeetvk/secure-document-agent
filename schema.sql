@@ -23,12 +23,11 @@ create table public.document_chunks (
   document_id uuid references public.documents(id) on delete cascade not null,
   workspace_id uuid references public.workspaces(id) on delete cascade not null, -- This enforces our strict isolation!
   content text not null,
-  embedding vector(768) not null, -- 768 is the exact dimension size for Google Gemini's embedding model
+  embedding vector(3072) not null, -- 3072 is the dimension size for gemini-embedding-2
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
--- Index for fast vector similarity search
-create index on public.document_chunks using hnsw (embedding vector_cosine_ops);
+-- Index for fast vector similarity search (REMOVED: pgvector hnsw does not support >2000 dimensions)
 
 -- 5. Tasks Table (We will use this for our AI "Tool Calling" side-effect)
 create table public.tasks (
