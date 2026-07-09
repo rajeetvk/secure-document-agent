@@ -2,7 +2,7 @@
 
 ## 1. AI Tools and Work Split
 - **Model used:** Gemini 3.1 Pro / Antigravity Agent.
-- **Work split:** The AI acted as an architectural guide and rapid prototyper. I manually directed the flow, reviewed every line of code, and architected the strict vector isolation and database structures to maintain complete control over the multi-tenant logic.
+- **Work split:** The AI acted as an architectural guide and rapid prototyper. The UI/Frontend was majority handled by the AI to ensure a premium, modern glassmorphic aesthetic within the 72-hour deadline. Meanwhile, I manually directed the backend flow, reviewed every line of core logic, and explicitly architected the strict vector isolation and database structures to maintain complete control over the multi-tenant implementation.
 
 ## 2. Key Decisions
 - **Database & Auth:** Chose Supabase over Neon. Supabase provides both `pgvector` for embeddings and built-in user authentication, solving the "secure user sign-in" requirement while allowing for seamless agentic capabilities.
